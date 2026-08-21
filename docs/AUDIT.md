@@ -9,6 +9,16 @@ inferred. Commands and outputs are quoted.
 as pinned, and separately scikit-learn 1.9.0 (the version the shipped `.pkl` files were actually
 built with).
 
+> **Note on missing files.** This is a record of the project *as audited*. Several
+> files examined below — the one-off codemods in `website/`, the `.bak`/`.backup`
+> copies, the duplicate training scripts, and the large `.pkl` weights — have since
+> been removed by `scripts/cleanup_legacy.sh`, and the model weights are not tracked
+> in git at all. The findings still stand; the files they describe are simply no
+> longer in the tree. `cleanup_legacy.sh --archive` tars everything it deletes to
+> `../FAKE_USER_DEC-legacy-<timestamp>.tar.gz` — one level *above* the repo, so the
+> archive is never committed. Failing that, this document quotes the relevant
+> output inline.
+
 ---
 
 ## Headline

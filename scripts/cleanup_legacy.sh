@@ -94,10 +94,15 @@ TARGETS=(
 
   # Duplicate datasets. Keep website/dataset.csv (15k, what the model saw) and
   # website/dataset_original.csv (10k, pre-augmentation).
-  "data/dataset.csv"
+  #
+  # data/dataset.csv and advanced_instagram_fake_real_data_filled_bio.csv used
+  # to be listed here and are NOT any more. They are the paper pipeline's
+  # control experiment: README.md and docs/PAPER_ALIGNMENT.md both document
+  # `ml.train_xgb --dataset ../data/dataset.csv`, which is what demonstrates
+  # that the pipeline scores at chance when the labels carry no information.
+  # Deleting them turns a documented command into a broken one.
   "papper/dataset.csv"
   "FAKE_PROFILE_TRAIN_CODE/dataset.csv"
-  "advanced_instagram_fake_real_data_filled_bio.csv"
 
   # Duplicate training scripts -- superseded by backend/ml/train.py
   "FAKE_PROFILE_TRAIN_CODE/train_improved.py"
