@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 564" width="860" height="564" font-family="system-ui,sans-serif">
+<rect width="860" height="564" fill="#ffffff"/>
+<text x="24" y="34" font-size="17" font-weight="600" fill="#111827">Algorithm comparison — measured accuracy</text>
+<text x="24" y="56" font-size="12" fill="#6b7280">../data/paper_signal.csv · cross-validated · dashed line = majority-class baseline (0.627)</text>
+<line x1="210.0" y1="86" x2="210.0" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="210.0" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.59</text>
+<line x1="278.3" y1="86" x2="278.3" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="278.3" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.64</text>
+<line x1="346.6" y1="86" x2="346.6" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="346.6" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.69</text>
+<line x1="414.9" y1="86" x2="414.9" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="414.9" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.74</text>
+<line x1="483.2" y1="86" x2="483.2" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="483.2" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.79</text>
+<line x1="551.5" y1="86" x2="551.5" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="551.5" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.84</text>
+<line x1="619.8" y1="86" x2="619.8" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="619.8" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.89</text>
+<line x1="688.0" y1="86" x2="688.0" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="688.0" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.94</text>
+<line x1="756.3" y1="86" x2="756.3" y2="510" stroke="#e5e7eb" stroke-width="1"/>
+<text x="756.3" y="526" font-size="10" text-anchor="middle" fill="#6b7280">0.99</text>
+<text x="200" y="113.0" font-size="12" text-anchor="end" fill="#374151">Random Forest</text>
+<rect x="210" y="96" width="478.0" height="26" fill="#93c5fd" rx="3"/>
+<text x="696.0" y="113.0" font-size="11" fill="#374151">0.9400 ±0.0041</text>
+<text x="200" y="147.0" font-size="12" text-anchor="end" fill="#374151">Extra Trees</text>
+<rect x="210" y="130" width="478.0" height="26" fill="#93c5fd" rx="3"/>
+<text x="696.0" y="147.0" font-size="11" fill="#374151">0.9400 ±0.0041</text>
+<text x="200" y="181.0" font-size="12" text-anchor="end" fill="#374151">Logistic Regression</text>
+<rect x="210" y="164" width="478.0" height="26" fill="#93c5fd" rx="3"/>
+<text x="696.0" y="181.0" font-size="11" fill="#374151">0.9400 ±0.0041</text>
+<text x="200" y="215.0" font-size="12" text-anchor="end" fill="#374151">Linear SVM</text>
+<rect x="210" y="198" width="478.0" height="26" fill="#93c5fd" rx="3"/>
+<text x="696.0" y="215.0" font-size="11" fill="#374151">0.9400 ±0.0041</text>
+<text x="200" y="249.0" font-size="12" text-anchor="end" fill="#374151">Gaussian Naive Bayes</text>
+<rect x="210" y="232" width="477.5" height="26" fill="#93c5fd" rx="3"/>
+<text x="695.5" y="249.0" font-size="11" fill="#374151">0.9396 ±0.0039</text>
+<text x="200" y="283.0" font-size="12" text-anchor="end" fill="#111827" font-weight="600">XGBoost</text>
+<rect x="210" y="266" width="476.7" height="26" fill="#1d4ed8" rx="3"/>
+<text x="694.7" y="283.0" font-size="11" fill="#374151">0.9390 ±0.0036</text>
+<text x="200" y="317.0" font-size="12" text-anchor="end" fill="#374151">MLP (128,64)</text>
+<rect x="210" y="300" width="476.7" height="26" fill="#93c5fd" rx="3"/>
+<text x="694.7" y="317.0" font-size="11" fill="#374151">0.9390 ±0.0043</text>
+<text x="200" y="351.0" font-size="12" text-anchor="end" fill="#374151">Decision Tree (depth 8)</text>
+<rect x="210" y="334" width="476.5" height="26" fill="#93c5fd" rx="3"/>
+<text x="694.5" y="351.0" font-size="11" fill="#374151">0.9389 ±0.0040</text>
+<text x="200" y="385.0" font-size="12" text-anchor="end" fill="#374151">HistGradientBoosting</text>
+<rect x="210" y="368" width="475.9" height="26" fill="#93c5fd" rx="3"/>
+<text x="693.9" y="385.0" font-size="11" fill="#374151">0.9384 ±0.0042</text>
+<text x="200" y="419.0" font-size="12" text-anchor="end" fill="#374151">Gradient Boosting</text>
+<rect x="210" y="402" width="475.5" height="26" fill="#93c5fd" rx="3"/>
+<text x="693.5" y="419.0" font-size="11" fill="#374151">0.9381 ±0.0048</text>
+<text x="200" y="453.0" font-size="12" text-anchor="end" fill="#374151">k-Nearest Neighbours (k=25)</text>
+<rect x="210" y="436" width="472.9" height="26" fill="#93c5fd" rx="3"/>
+<text x="690.9" y="453.0" font-size="11" fill="#374151">0.9362 ±0.0042</text>
+<text x="200" y="487.0" font-size="12" text-anchor="end" fill="#374151">AdaBoost</text>
+<rect x="210" y="470" width="470.4" height="26" fill="#93c5fd" rx="3"/>
+<text x="688.4" y="487.0" font-size="11" fill="#374151">0.9344 ±0.0038</text>
+<line x1="260.8" y1="82" x2="260.8" y2="510" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="266.8" y="76" font-size="11" fill="#dc2626">baseline 0.627</text>
+</svg>

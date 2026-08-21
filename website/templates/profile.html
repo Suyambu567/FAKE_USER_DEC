@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Fake Profile Detection AI</title>
+    <style>
+        :root {
+            --primary: #6e8efb;
+            --primary-dark: #5a75d8;
+            --secondary: #a777e3;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --border: #e9ecef;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            transition: var(--transition);
+            gap: 0.75rem;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            font-weight: 600;
+        }
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .header {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.5rem;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+        .user-status {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        .user-email {
+            font-size: 0.9rem;
+            color: #95a5a6;
+            margin-top: 0.25rem;
+        }
+        /* Content Section */
+        .content-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin: 2rem;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        .content-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .profile-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+        .profile-header p {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .activity-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .activity-header h3 {
+            color: var(--text-primary);
+            margin: 0;
+        }
+        .activity-item {
+            display: flex;
+            justify-content: space-between: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        .activity-details {
+            flex: 1;
+        }
+        .activity-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        .activity-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .activity-time {
+            font-size: 0.85rem;
+            color: #95a5a6;
+        }
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            margin-right: 1rem;
+        }
+        .activity-icon.predictions { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .activity-icon.settings { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .activity-icon.analytics { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        /* Flash messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .alert-error {
+            background-color: #fdf2f2;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        .alert-success {
+            background-color: #f0fff4;
+            color: #1e8449;
+            border: 1px solid #27ae60;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(110,142,251,0.4);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110,142,251,0.5);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background: rgba(110,142,251,0.1);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110,142,251,0.2);
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 1.5rem;
+            }
+            .sidebar-header h1,
+            .sidebar-nav span,
+            .user-details {
+                display: none;
+            }
+            .sidebar-header p {
+                display: none;
+            }
+            .sidebar-header {
+                justify-content: center;
+            }
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 1rem;
+            }
+            .sidebar-nav a i {
+                margin-right: 0;
+            }
+            .content-section {
+                margin: 1rem;
+                padding: 1.5rem;
+                max-height: none;
+            }
+            .user-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .user-info {
+                justify-content: center;
+            }
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .activity-details {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>🤖 AI Detect</h1>
+            <p>Fake Profile Detection</p>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/"><span>🔍 Search Profiles</span></a></li>
+            <li><a href="/dashboard"><span>📊 Dashboard</span></a></li>
+            <li><a href="/analytics"><span>📈 Analytics</span></a></li>
+            <li><a href="/settings"><span>⚙� Settings</span></a></li>
+            <li><a href="/profile" class="active"><span>👤 Profile</span></a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>👤 Profile</h1>
+            <div class="user-info">
+                <div class="user-avatar">S</div>
+                <div class="user-details">
+                    <div class="user-name">Suyambu</div>
+                    <div class="user-status">Data Scientist & AI Enthusiast</div>
+                    <div class="user-email">suyambu@example.com</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="content-section">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <h2>Account Overview</h2>
+                    <p>Your personalized AI detection experience</p>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-box">
+                        <div class="stat-number">1,240</div>
+                        <div class="stat-label">Profiles Analyzed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">68%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">342</div>
+                        <div class="stat-label">Fake Accounts Found</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">898</div>
+                        <div class="stat-label">Real Accounts Verified</div>
+                    </div>
+                </div>
+
+                <div class="profile-stats" style="margin-top: 1.5rem;">
+                    <div class="stat-box">
+                        <div class="stat-number">0.8s</div>
+                        <div class="stat-label">Avg Response Time</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">System Uptime</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">10</div>
+                        <div class="stat-label">Features Analyzed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Monitoring Active</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Recent Activity</h2>
+            <div class="activity-section">
+                <div class="activity-header">
+                    <h3>Latest Actions</h3>
+                    <a href="#" class="btn btn-outline">View All Activity</a>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon predictions">🔍</div>
+                    <div class="activity-details">
+                        <div class="activity-title">Analyzed Instagram Profile</div>
+                        <div class="activity-description">Checked @travelblogger for authenticity - Result: Real Account (82% confidence)</div>
+                    </div>
+                    <div class="activity-time">2 hours ago</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon analytics">📊</div>
+                    <div class="activity-details">
+                        <div class="activity-title">Viewed Analytics Dashboard</div>
+                        <div class="activity-description">Reviewed model performance metrics and prediction trends</div>
+                    </div>
+                    <div class="activity-time">5 hours ago</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon settings">⚙�</div>
+                    <div class="activity-details">
+                        <div class="activity-title">Updated Detection Threshold</div>
+                        <div class="activity-description">Adjusted fake detection sensitivity from 0.5 to 0.55</div>
+                    </div>
+                    <div class="activity-time">1 day ago</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon predictions">🔍</div>
+                    <div class="activity-details">
+                        <div class="activity-title">Batch Profile Analysis</div>
+                        <div class="activity-description">Processed 50 profiles for authenticity check</div>
+                    </div>
+                    <div class="activity-time">2 days ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+                labels: ['0-1%', '1-2%', '2-3%', '3-4%', '4-5%', '5-6%', '6-7%', '7-8%', '8-9%', '9-10%', '10-15%', '15-20%+'],
+                datasets: [{
+                    label: 'Number of Accounts',
+                    data: [120, 85, 70, 95, 110, 90, 75, 80, 65, 50, 30, 25],
+                    fill: false,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    tension: 0.3,
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Distribution of Engagement Rates'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Accounts'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Engagement Rate (%)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // System Health Status - Key Metrics Bar Chart
+        const healthCtx = document.getElementById('systemHealthChart').getContext('2d');
+        const healthChart = new Chart(healthCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Accuracy', 'Response Time', 'Uptime', 'Memory Usage'],
+                datasets: [{
+                    label: 'System Health Metrics',
+                    data: [68, 0.8, 99.9, 45],
+                    backgroundColor: [
+                        'rgba(34, 197, 94, 0.8)',   // Success green
+                        'rgba(59, 130, 246, 0.8)',   // Blue
+                        'rgba(251, 191, 36, 0.8)',   // Warning amber
+                        'rgba(168, 85, 247, 0.8)'    // Purple
+                    ],
+                    borderColor: [
+                        'rgba(34, 197, 94, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(251, 191, 36, 1)',
+                        'rgba(168, 85, 247, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.parsed.x;
+                                if (context.datasetIndex === 0) { // Accuracy
+                                    return value + '%';
+                                } else if (context.datasetIndex === 1) { // Response Time
+                                    return value + 's';
+                                } else if (context.datasetIndex === 2) { // Uptime
+                                    return value + '%';
+                                } else { // Memory Usage
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Metrics'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

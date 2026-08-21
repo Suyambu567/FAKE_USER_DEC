@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Analysis - Fake Profile Detection AI</title>
+    <style>
+        :root {
+            --primary: #6e8efb;
+            --primary-dark: #5a75d8;
+            --secondary: #a777e3;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --border: #e9ecef;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            transition: var(--transition);
+            gap: 0.75rem;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            font-weight: 600;
+        }
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .header {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .user-status {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        /* Stats Container */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        /* Content Section */
+        .content-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin: 2rem;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        .content-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .word-cloud-container {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .word-cloud {
+            display: inline-block;
+            min-height: 200px;
+            line-height: 1.6;
+        }
+        .word {
+            display: inline-block;
+            margin: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .word:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .word-size-1 { font-size: 0.9rem; background: #ecf0f1; color: #7f8c8d; }
+        .word-size-2 { font-size: 1.1rem; background: #d5dbdb; color: #636e72; }
+        .word-size-3 { font-size: 1.3rem; background: #bdc3c7; color: #2d3436; }
+        .word-size-4 { font-size: 1.5rem; background: #aaa69d; color: #2d3436; }
+        .word-size-5 { font-size: 1.7rem; background: #85c1e9; color: #2d3436; }
+        .word-size-6 { font-size: 1.9rem; background: #82ccdd; color: #2d3436; }
+        .word-size-7 { font-size: 2.1rem; background: #b2bec3; color: #2d3436; }
+        .word-size-8 { font-size: 2.3rem; background: #dff9fb; color: #2d3436; }
+        .word-size-9 { font-size: 2.5rem; background: #f6b93b; color: #2d3436; }
+        .word-size-10 { font-size: 2.7rem; background: #fdcb6e; color: #2d3436; }
+        .sentiment-analysis {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+        .sentiment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .sentiment-score {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            min-width: 80px;
+        }
+        .sentiment-score.positive { color: var(--success); }
+        .sentiment-score.negative { color: var(--danger); }
+        .sentiment-score.neutral { color: var(--warning); }
+        .sentiment-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .sentiment-details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+        }
+        .sentiment-item {
+            text-align: center;
+        }
+        .sentiment-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .sentiment-label-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .word-frequency {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        .frequency-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .frequency-table th,
+        .frequency-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .frequency-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .frequency-table tr:hover {
+            background-color: #f8f9fa;
+            }
+        .frequency-count {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        .frequency-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.25rem;
+        }
+        .frequency-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+        }
+        /* Flash messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .alert-error {
+            background-color: #fdf2f2;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        .alert-success {
+            background-color: #f0fff4;
+            color: #1e8449;
+            border: 1px solid #27ae60;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 1.5rem;
+            }
+            .sidebar-header h1,
+            .sidebar-nav span,
+            .user-details,
+            .stat-label {
+                display: none;
+            }
+            .sidebar-header p {
+                display: none;
+            }
+            .sidebar-header {
+                justify-content: center;
+            }
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 1rem;
+            }
+            .sidebar-nav a i {
+                margin-right: 0;
+            }
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-section {
+                margin: 1rem;
+                padding: 1.5rem;
+                max-height: none;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .user-info {
+                justify-content: center;
+            }
+            .word-cloud {
+                font-size: 0.9rem;
+            }
+            .sentiment-score {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>🤖 AI Detect</h1>
+            <p>Fake Profile Detection</p>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/"><span>🔍 Search Profiles</span></a></li>
+            <li><a href="/dashboard"><span>📊 Dashboard</span></a></li>
+            <li><a href="/analytics"><span>📈 Analytics</span></a></li>
+            <li><a href="/settings"><span>⚙� Settings</span></a></li>
+            <li><a href="/profile"><span>👤 Profile</span></a></li>
+            <li><a href="/word-analysis" class="active"><span>📝 Word Analysis</span></a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>📝 Word Analysis</h1>
+            <div class="user-info">
+                <div class="user-avatar">S</div>
+                <div class="user-details">
+                    <div class="user-name">Welcome Back, Suyambu 👋</div>
+                    <div class="user-status">Last seen just now</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">1,240</div>
+                <div class="stat-label">Total Bios Analyzed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔤</div>
+                <div class="stat-value">8,920</div>
+                <div class="stat-label">Unique Words Found</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">😊</div>
+                <div class="stat-value">68%</div>
+                <div class="stat-label">Positive Sentiment Bios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value">12.4</div>
+                <div class="stat-label">Avg Words per Bio</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Word Cloud - Common Terms in Profile Bios</h2>
+            <div class="word-cloud-container">
+                <div class="word-cloud">
+                    <span class="word word-size-5">travel</span>
+                    <span class="word word-size-4">food</span>
+                    <span class="word word-size-6">fitness</span>
+                    <span class="word word-size-3">photography</span>
+                    <span class="word word-size-4">music</span>
+                    <span class="word word-size-5">artist</span>
+                    <span class="word word-size-3">entrepreneur</span>
+                    <span class="word word-size-4">blogger</span>
+                    <span class="word word-size-3">student</span>
+                    <span class="word word-size-4">designer</span>
+                    <span class="word word-size-2">developer</span>
+                    <span class="word word-size-3">writer</span>
+                    <span class="word word-size-2">gamer</span>
+                    <span class="word word-size-4">lover</span>
+                    <span class="word word-size-5">enthusiast</span>
+                    <span class="word word-size-3">explorer</span>
+                    <span class="word word-size-4">creator</span>
+                    <span class="word word-size-2">fan</span>
+                    <span class="word word-size-3">lover</span>
+                    <span class="word word-size-4">addict</span>
+                    <span class="word word-size-5">expert</span>
+                    <span class="word word-size-2">pro</span>
+                    <span class="word word-size-3">pro</span>
+                </div>
+                <p style="margin-top: 1rem; color: #7f8c8d; font-size: 0.9rem;">
+                    Larger words appear more frequently in profile bios
+                </p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Sentiment Analysis</h2>
+            <div class="sentiment-analysis">
+                <div class="sentiment-header">
+                    <div>
+                        <div class="sentiment-label">Overall Sentiment Score</div>
+                        <div class="sentiment-score positive">0.72</div>
+                    </div>
+                    <div>
+                        <div class="sentiment-label">Sentiment Category</div>
+                        <div class="sentiment-label-text">Positive</div>
+                    </div>
+                </div>
+                <div class="sentiment-details">
+                    <div class="sentiment-item">
+                        <div class="sentiment-value">68%</div>
+                        <div class="sentiment-label-text">Positive</div>
+                    </div>
+                    <div class="sentiment-item">
+                        <div class="sentiment-value">22%</div>
+                        <div class="sentiment-label-text">Neutral</div>
+                    </div>
+                    <div class="sentiment-item">
+                        <div class="sentiment-value">10%</div>
+                        <div class="sentiment-label-text">Negative</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Most Frequent Words in Bios</h2>
+            <div class="word-frequency">
+                <table class="frequency-table">
+                    <thead>
+                        <tr>
+                            <th>Word</th>
+                            <th>Frequency</th>
+                            <th>Usage Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>travel</td>
+                            <td class="frequency-count">185</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 90%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>food</td>
+                            <td class="frequency-count">162</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 78%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>fitness</td>
+                            <td class="frequency-count">148</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 72%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>photography</td>
+                            <td class="frequency-count">135</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 65%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>music</td>
+                            <td class="frequency-count">128</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 62%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>artist</td>
+                            <td class="frequency-count">120</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 58%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>entrepreneur</td>
+                            <td class="frequency-count">112</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 54%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>blogger</td>
+                            <td class="frequency-count">105</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 51%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>student</td>
+                            <td class="frequency-count">98</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 48%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>designer</td>
+                            <td class="frequency-count">92</td>
+                            <td>
+                                <div class="frequency-bar">
+                                    <div class="frequency-bar-fill" style="width: 45%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

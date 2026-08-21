@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Fake Profile Detection AI</title>
+    <style>
+        :root {
+            --primary: #6e8efb;
+            --primary-dark: #5a75d8;
+            --secondary: #a777e3;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --border: #e9ecef;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            transition: var(--transition);
+            gap: 0.75rem;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            font-weight: 600;
+        }
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .header {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items:center: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .user-status {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        /* Content Section */
+        .content-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin: 2rem;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        .content-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .settings-group {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+        .settings-group h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        .setting-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .setting-value {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .setting-input {
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            width: 150px;
+        }
+        .setting-select {
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            width: 180px;
+        }
+        .setting-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        /* Flash messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .alert-error {
+            background-color: #fdf2f2;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        .alert-success {
+            background-color: #f0fff4;
+            color: #1e8449;
+            border: 1px solid #27ae60;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(110,142,251,0.4);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110,142,251,0.5);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-secondary {
+            background: #95a5a6;
+            box-shadow: 0 4px 15px rgba(149,165,166,0.4);
+        }
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            box-shadow: 0 6px 20px rgba(127,140,141,0.5);
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 1.5rem;
+            }
+            .sidebar-header h1,
+            .sidebar-nav span,
+            .user-details {
+                display: none;
+            }
+            .sidebar-header p {
+                display: none;
+            }
+            .sidebar-header {
+                justify-content: center;
+            }
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 1rem;
+            }
+            .sidebar-nav a i {
+                margin-right: 0;
+            }
+            .content-section {
+                margin: 1rem;
+                padding: 1.5rem;
+                max-height: none;
+            }
+        }
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .user-info {
+                justify-content: center;
+            }
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .setting-label {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>🤖 AI Detect</h1>
+            <p>Fake Profile Detection</p>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/"><span>🔍 Search Profiles</span></a></li>
+            <li><a href="/dashboard"><span>📊 Dashboard</span></a></li>
+            <li><a href="/analytics"><span>📈 Analytics</span></a></li>
+            <li><a href="/settings" class="active"><span>⚙� Settings</span></a></li>
+            <li><a href="/profile"><span>👤 Profile</span></a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>⚙️ Settings</h1>
+            <div class="user-info">
+                <div class="user-avatar">S</div>
+                <div class="user-details">
+                    <div class="user-name">Welcome Back, Suyambu 👋</div>
+                    <div class="user-status">Last seen just now</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="content-section">
+            <h2>Model Settings</h2>
+            <div class="settings-group">
+                <h3>Prediction Thresholds</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Fake Detection Threshold:</span>
+                    <div class="setting-value">
+                        <input type="number" class="setting-input" value="0.5" step="0.1" min="0" max="1">
+                        <span> (0.0 - 1.0)</span>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Confidence Threshold for Alerts:</span>
+                    <div class="setting-value">
+                        <input type="number" class="setting-input" value="0.7" step="0.1" min="0" max="1">
+                        <span> (0.0 - 1.0)</span>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Model Version:</span>
+                    <span class="setting-value">
+                        <select class="setting-select">
+                            <option value="v1.0">v1.0 (Current)</option>
+                            <option value="v1.1-beta">v1.1-beta</option>
+                            <option value="v2.0-planned">v2.0-planned</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Notification Preferences</h2>
+            <div class="settings-group">
+                <h3>Alert Settings</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Email Notifications:</span>
+                    <div class="setting-value">
+                        <input type="checkbox" class="setting-checkbox" checked>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Browser Notifications:</span>
+                    <div class="setting-value">
+                        <input type="checkbox" class="setting-checkbox">
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Alert Frequency:</span>
+                    <div class="setting-value">
+                        <select class="setting-select">
+                             <option value="immediate">Immediate</option>
+                             <option value="hourly">Hourly Digest</option>
+                             <option value="daily">Daily Digest</option>
+                             <option value="weekly">Weekly Digest</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Data & Privacy</h2>
+            <div class="settings-group">
+                <h3>Data Handling</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Store Prediction History:</span>
+                    <div class="setting-value">
+                        <input type="checkbox" class="setting-checkbox" checked>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Share Anonymous Analytics:</span>
+                    <div class="setting-value">
+                        <input type="checkbox" class="setting-checkbox">
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Data Retention Period:</span>
+                    <div class="setting-value">
+                        <select class="setting-select">
+                            <option value="30">30 Days</option>
+                            <option value="90">90 Days</option>
+                            <option value="365">1 Year</option>
+                            <option value="indefinite">Indefinite</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Appearance</h2>
+            <div class="settings-group">
+                <h3>Interface Preferences</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Theme:</span>
+                    <div class="setting-value">
+                        <select class="setting-select">
+                            <option value="light">Light (Current)</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto (System)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Enable Animations:</span>
+                    <div class="setting-value">
+                        <input type="checkbox" class="setting-checkbox" checked>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Sidebar Width:</span>
+                    <div class="setting-value">
+                        <select class="setting-select">
+                            <option value="compact">Compact (80px)</option>
+                            <option value="normal">Normal (280px) Current</option>
+                            <option value="expanded">Expanded (350px)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" style="margin-right: 1rem;">Save Settings</button>
+                <button class="btn btn-secondary">Reset to Defaults</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

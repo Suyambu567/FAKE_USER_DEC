@@ -1,0 +1,128 @@
+{
+  "model_version": "20260807052852",
+  "algorithm": "RandomForestClassifier + TF-IDF(bio) + StandardScaler(numeric)",
+  "trained_at": "2026-08-07T05:28:52.868894+00:00",
+  "sklearn_version": "1.7.2",
+  "python_version": "3.11.15",
+  "dataset": "../data/synthetic_signal.csv",
+  "training_samples": 50000,
+  "feature_count": 112,
+  "classes": [
+    "Fake",
+    "Real"
+  ],
+  "positive_class": "Fake",
+  "feature_map": {
+    "followers": "Followers",
+    "following": "Following",
+    "posts": "Posts",
+    "engagement_rate": "Engagement Rate (%)",
+    "avg_likes_per_post": "Avg Likes per Post",
+    "avg_comments_per_post": "Avg Comments per Post",
+    "verified": "Verified",
+    "account_age_years": "Account Age (Years)",
+    "bio_text": "Bio Text"
+  },
+  "hyperparameters": {
+    "n_estimators": 60,
+    "max_depth": 9,
+    "min_samples_leaf": 30
+  },
+  "metrics": {
+    "accuracy": 0.9342,
+    "baseline_accuracy": 0.6312,
+    "lift_over_baseline": 0.303,
+    "precision": 0.9282,
+    "recall": 0.8905,
+    "f1": 0.9089,
+    "roc_auc": 0.9317,
+    "cv_accuracy_mean": 0.9367,
+    "cv_accuracy_std": 0.0028
+  },
+  "top_feature_importances": [
+    {
+      "feature": "Posts",
+      "importance": 0.308368
+    },
+    {
+      "feature": "Account Age (Years)",
+      "importance": 0.172481
+    },
+    {
+      "feature": "Following",
+      "importance": 0.141583
+    },
+    {
+      "feature": "Engagement Rate (%)",
+      "importance": 0.086296
+    },
+    {
+      "feature": "Avg Likes per Post",
+      "importance": 0.060197
+    },
+    {
+      "feature": "bio",
+      "importance": 0.037459
+    },
+    {
+      "feature": "Followers",
+      "importance": 0.033425
+    },
+    {
+      "feature": "click",
+      "importance": 0.025152
+    },
+    {
+      "feature": "Avg Comments per Post",
+      "importance": 0.021358
+    },
+    {
+      "feature": "link",
+      "importance": 0.017492
+    },
+    {
+      "feature": "dm",
+      "importance": 0.014824
+    },
+    {
+      "feature": "followers",
+      "importance": 0.007579
+    },
+    {
+      "feature": "free",
+      "importance": 0.006721
+    },
+    {
+      "feature": "promo",
+      "importance": 0.00627
+    },
+    {
+      "feature": "follow",
+      "importance": 0.005403
+    },
+    {
+      "feature": "lover",
+      "importance": 0.004553
+    },
+    {
+      "feature": "coffee",
+      "importance": 0.004048
+    },
+    {
+      "feature": "price",
+      "importance": 0.003853
+    },
+    {
+      "feature": "producer",
+      "importance": 0.003602
+    },
+    {
+      "feature": "l4l",
+      "importance": 0.003438
+    }
+  ],
+  "warnings": [
+    "Trained on a SYNTHETIC dataset (backend/ml/generate_dataset.py), not on real Instagram accounts. It has learned that generator's rules, which are modelled on how fake engagement behaves but are not the real thing. Use it to evaluate the pipeline, not to judge real people.",
+    "Bio Text has only 35 distinct values across 50000 rows; it carries almost no signal and the TF-IDF features are near-constant."
+  ]
+}

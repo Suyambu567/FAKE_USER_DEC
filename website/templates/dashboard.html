@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Fake Profile Detection AI</title>
+    <style>
+        :root {
+            --primary: #6e8efb;
+            --primary-dark: #5a75d8;
+            --secondary: #a777e3;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --border: #e9ecef;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-hover: 0 8px 15px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+            --transition-fast: all 0.15s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            transition: var(--transition);
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: width 0.3s ease;
+        }
+        .sidebar-nav a:hover::before {
+            width: 100%;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            font-weight: 600;
+        }
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .header {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(110, 142, 251, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(167, 119, 227, 0.03) 0%, transparent 40%);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .user-status {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        /* Welcome Section */
+        .welcome-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -25%;
+            left: -25%;
+            width: 150%;
+            height: 150%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(110, 142, 251, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(167, 119, 227, 0.02) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+        .welcome-title {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .welcome-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        /* Stats Container */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 0 2rem 2rem 2rem;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        .stats-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(110, 142, 251, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(167, 119, 227, 0.02) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.75rem;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: none;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin: 0.75rem 0;
+            letter-spacing: -0.5px;
+        }
+        .stat-label {
+            font-size: 1rem;
+            color: #7f8c8d;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        /* Content Section */
+        .content-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin: 0 2rem 2rem 2rem;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: -25%;
+            left: -25%;
+            width: 150%;
+            height: 150%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(110, 142, 251, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(167, 119, 227, 0.02) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+        .content-section-content {
+            position: relative;
+            z-index: 2;
+        }
+        .content-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #eee;
+        }
+        /* Chart containers */
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: -25%;
+            left: -25%;
+            width: 150%;
+            height: 150%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(110, 142, 251, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(167, 119, 227, 0.02) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+        .chart-content {
+            position: relative;
+            z-index: 2;
+        }
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        .metric-label {
+            font-weight: 500;
+            color: #34495e;
+            font-size: 0.95rem;
+        }
+        .metric-value {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        .metric-value.positive {
+            color: #27ae60;
+        }
+        .metric-value.negative {
+            color: #e74c3c;
+        }
+        .metric-value.neutral {
+            color: #f39c12;
+        }
+        /* Progress bars */
+        .progress-container {
+            margin: 0.75rem 0;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6e8efb, #a777e3);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        /* Activity Section */
+        .activity-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin: 0 2rem 2rem 2rem;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        .activity-section::before {
+            content: '';
+            position: absolute;
+            top: -25%;
+            left: -25%;
+            width: 150%;
+            height: 150%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(110, 142, 251, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(167, 119, 227, 0.02) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+        .activity-content {
+            position: relative;
+            z-index: 2;
+        }
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .activity-header h3 {
+            color: #2c3e50;
+            margin: 0;
+        }
+        .activity-item {
+            display: flex;
+            justify-content: space-between: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        .activity-details {
+            flex: 1;
+        }
+        .activity-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        .activity-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .activity-time {
+            font-size: 0.85rem;
+            color: #95a5a6;
+        }
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            margin-right: 1rem;
+        }
+        .activity-icon.predictions { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .activity-icon.settings { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .activity-icon.analytics { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        /* Flash messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .alert-error {
+            background-color: #fdf2f2;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        .alert-success {
+            background-color: #f0fff4;
+            color: #1e8449;
+            border: 1px solid #27ae60;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+                padding: 1.5rem;
+            }
+            .sidebar-header h1,
+            .sidebar-nav span,
+            .user-details,
+            .stat-label {
+                display: none;
+            }
+            .sidebar-header p {
+                display: none;
+            }
+            .sidebar-header {
+                justify-content: center;
+            }
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 1rem;
+            }
+            .sidebar-nav a i {
+                margin-right: 0;
+            }
+            .welcome-section,
+            .stats-container,
+            .content-section,
+            .activity-section {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .user-info {
+                justify-content: center;
+            }
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+        }
+        /* Animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(10px);
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>🤖 AI Detect</h1>
+            <p>Fake Profile Detection</p>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/"><span>🔍 Search Profiles</span></a></li>
+            <li><a href="/dashboard" class="active"><span>📊 Dashboard</span></a></li>
+            <li><a href="/analytics"><span>📈 Analytics</span></a></li>
+            <li><a href="/settings"><span>⚙️ Settings</span></a></li>
+            <li><a href="/profile"><span>👤 Profile</span></a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="header-content">
+                <h1>📊 Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar">S</div>
+                    <div class="user-details">
+                        <div class="user-name">Welcome Back, Suyambu 👋</div>
+                        <div class="user-status">Last seen just now</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <div class="welcome-title">
+                    <span>📈</span> Overview & Insights
+                </div>
+                <p class="welcome-text">
+                    Your personalized dashboard for monitoring fake profile detection performance.
+                    Get real-time insights into model accuracy, detection rates, and system health.
+                </p>
+            </div>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">1,240</div>
+                <div class="stat-label">Total Profiles Analyzed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">68%</div>
+                <div class="stat-icon">✅</div>
+                <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">342</div>
+                <div class="stat-icon">🚨</div>
+                <div class="stat-label">Fake Accounts Detected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">898</div>
+                <div class="stat-icon">👥</div>
+                <div class="stat-label">Real Accounts Verified</div>
+            </div>
+        </div>
+
+        <!-- Model Performance Section -->
+        <div class="content-section">
+            <h2>📊 Model Performance Trends</h2>
+            <div class="chart-container">
+                <div class="chart-content">
+                    <div class="chart-title">
+                        <span>📈</span> Detection Rates Over Time
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Today's Detection Rate:</span>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Fake Accounts</span>
+                                <span class="metric-value negative">38%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 38%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Real Account Detection:</span>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Real Accounts</span>
+                                <span class="metric-value positive">62%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 62%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Model Confidence:</span>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Average Confidence</span>
+                                <span class="metric-value">76%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 76%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Daily Predictions:</span>
+                        <span class="metric-value positive">24</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health Section -->
+        <div class="content-section">
+            <h2>⚙️ System Health & Performance</h2>
+            <div class="chart-container">
+                <div class="chart-content">
+                    <div class="chart-title">
+                        <span>💻</span> System Status
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Model Status:</span>
+                        <span class="metric-value positive">● Online</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Last Updated:</span>
+                        <span class="metric-value">2 hours ago</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Processing Speed:</span>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Response Time</span>
+                                <span class="metric-value positive">0.8s avg</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">System Uptime:</span>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Uptime Percentage</span>
+                                <span class="metric-value positive">99.9%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 99.9%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Memory Usage:</span>
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Memory Consumption</span>
+                                <span class="metric-value">45%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+*.log
+
+# Model artifacts are build output, not source. Rebuild with:
+#   python -m ml.train --dataset <csv> --out artifacts
+# Ship them via your release pipeline or an object store, not git -- committing
+# binaries is how this project ended up with five .pkl files totalling 349 MB.
+artifacts/*.joblib
+!artifacts/model_meta.json

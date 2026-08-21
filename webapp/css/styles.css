@@ -1,0 +1,505 @@
+/*
+ * Fake User Detection — styles
+ *
+ * Plain CSS, no framework, no build step. Custom properties carry the palette so
+ * light and dark are one definition each; the theme follows the OS by default and
+ * a data-theme attribute on <html> overrides it when the user picks.
+ *
+ * Mobile-first: the single-column layout is the base, and the grid only splits at
+ * 34rem. Touch targets are 44px minimum throughout.
+ */
+
+/* ---- tokens ------------------------------------------------------------- */
+
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text: #0f172a;
+  --text-muted: #64748b;
+
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef2ff;
+
+  --ok: #059669;
+  --ok-soft: #ecfdf5;
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --warn: #b45309;
+  --warn-soft: #fffbeb;
+  --info-soft: #eff6ff;
+  --info: #1d4ed8;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
+  --ring: 0 0 0 3px rgba(79, 70, 229, .28);
+
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1120;
+    --surface: #111827;
+    --surface-2: #0f172a;
+    --border: #1f2937;
+    --border-strong: #334155;
+    --text: #e5e7eb;
+    --text-muted: #94a3b8;
+
+    --accent: #818cf8;
+    --accent-hover: #a5b4fc;
+    --accent-soft: #1e1b4b;
+
+    --ok: #34d399;
+    --ok-soft: #052e26;
+    --danger: #f87171;
+    --danger-soft: #3f1212;
+    --warn: #fbbf24;
+    --warn-soft: #3a2a06;
+    --info-soft: #10213f;
+    --info: #93c5fd;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px rgba(0, 0, 0, .35);
+    --ring: 0 0 0 3px rgba(129, 140, 248, .35);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b1120;
+  --surface: #111827;
+  --surface-2: #0f172a;
+  --border: #1f2937;
+  --border-strong: #334155;
+  --text: #e5e7eb;
+  --text-muted: #94a3b8;
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-soft: #1e1b4b;
+  --ok: #34d399;
+  --ok-soft: #052e26;
+  --danger: #f87171;
+  --danger-soft: #3f1212;
+  --warn: #fbbf24;
+  --warn-soft: #3a2a06;
+  --info-soft: #10213f;
+  --info: #93c5fd;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 8px 24px rgba(0, 0, 0, .35);
+  --ring: 0 0 0 3px rgba(129, 140, 248, .35);
+}
+
+/* ---- base --------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* The UA stylesheet's `[hidden] { display: none }` loses to any class selector
+   that sets `display`, so `.notice`, `.result` and `.card` would stay on screen
+   after JS set `hidden`. This restores the attribute's meaning. */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; line-height: 1.25; font-weight: 650; }
+
+.wrap {
+  width: 100%;
+  max-width: 44rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 1.5rem);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: 1rem; top: 1rem;
+  z-index: 10;
+  padding: .6rem 1rem;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+
+/* ---- header ------------------------------------------------------------- */
+
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: .85rem;
+}
+
+.brand { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.brand-mark { font-size: 1.6rem; line-height: 1; }
+.brand h1 { font-size: 1.1rem; letter-spacing: -.01em; }
+.brand-sub { margin: 0; font-size: .78rem; color: var(--text-muted); }
+
+.icon-btn {
+  flex: none;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.icon-btn:hover { color: var(--text); border-color: var(--border-strong); }
+
+/* ---- cards -------------------------------------------------------------- */
+
+main { padding-block: 1.25rem 2rem; display: grid; gap: 1rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(1.1rem, 4vw, 1.6rem);
+}
+
+.card-title {
+  font-size: 1.02rem;
+  margin-bottom: 1.1rem;
+  letter-spacing: -.01em;
+}
+
+/* ---- notices ------------------------------------------------------------ */
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  padding: .8rem .95rem;
+  border-radius: var(--radius-sm);
+  font-size: .875rem;
+  border: 1px solid transparent;
+}
+.notice + .notice { margin-top: .6rem; }
+.notice.compact { margin-bottom: 1.1rem; display: block; }
+.notice strong { font-weight: 650; }
+
+.notice-info   { background: var(--info-soft);   color: var(--info);   border-color: color-mix(in srgb, var(--info) 22%, transparent); }
+.notice-warn   { background: var(--warn-soft);   color: var(--warn);   border-color: color-mix(in srgb, var(--warn) 28%, transparent); }
+.notice-danger { background: var(--danger-soft); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 26%, transparent); }
+.notice-ok     { background: var(--ok-soft);     color: var(--ok);     border-color: color-mix(in srgb, var(--ok) 26%, transparent); }
+
+/* ---- forms -------------------------------------------------------------- */
+
+.field { display: grid; gap: .35rem; margin-bottom: 1rem; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+input[type="text"], input[type="number"], textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: .6rem .8rem;
+  font: inherit;
+  font-size: 1rem;                 /* 16px stops iOS Safari zooming on focus */
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+textarea { resize: vertical; min-height: 62px; line-height: 1.5; }
+
+input:focus-visible, textarea:focus-visible, .btn:focus-visible,
+.icon-btn:focus-visible, summary:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--ring);
+}
+
+input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: .7; }
+
+.input-prefix {
+  display: flex;
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+.input-prefix:focus-within { border-color: var(--accent); box-shadow: var(--ring); }
+.input-prefix > span {
+  padding-inline: .8rem 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.input-prefix input {
+  border: none;
+  background: transparent;
+  box-shadow: none !important;
+  padding-left: .25rem;
+}
+
+.field-help { margin: 0; font-size: .78rem; color: var(--text-muted); }
+.field-error { margin: 0; font-size: .8rem; color: var(--danger); font-weight: 500; }
+input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--danger); }
+
+.field-check { align-self: end; }
+.checkbox {
+  display: flex; align-items: center; gap: .55rem;
+  min-height: 44px; cursor: pointer; font-weight: 500;
+}
+.checkbox input { width: 20px; height: 20px; accent-color: var(--accent); margin: 0; }
+
+.grid { display: grid; gap: 0 .9rem; }
+@media (min-width: 34rem) { .grid { grid-template-columns: 1fr 1fr; } }
+
+/* ---- buttons ------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 46px;
+  padding: .65rem 1.15rem;
+  font: inherit;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color .15s, border-color .15s, opacity .15s;
+}
+.btn-block { width: 100%; margin-top: .35rem; }
+
+/* On the dark palette --accent is a light indigo, so white text on it fails
+   contrast. Pin the label to the dark surface colour instead. */
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .btn-primary { color: #0b1120; }
+}
+:root[data-theme="dark"] .btn-primary { color: #0b1120; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+  font-size: .86rem;
+  min-height: 40px;
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--accent); }
+
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ---- spinner ------------------------------------------------------------ */
+
+.spinner {
+  flex: none;
+  width: 16px; height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+.spinner-btn { border-color: rgba(255,255,255,.55); border-top-color: transparent; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 2s; }
+  * { transition-duration: .01ms !important; }
+}
+
+/* ---- disclosure --------------------------------------------------------- */
+
+.disclosure {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  background: var(--surface-2);
+}
+.disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+  min-height: 46px;
+  padding: .6rem .9rem;
+  cursor: pointer;
+  font-size: .88rem;
+  font-weight: 600;
+  list-style: none;
+  border-radius: var(--radius-sm);
+}
+.disclosure summary::-webkit-details-marker { display: none; }
+.disclosure summary::after {
+  content: "▸";
+  margin-left: auto;
+  color: var(--text-muted);
+  transition: transform .15s;
+}
+.disclosure[open] summary::after { transform: rotate(90deg); }
+.disclosure-hint { font-size: .76rem; font-weight: 400; color: var(--text-muted); }
+.disclosure-body { padding: 0 .9rem 1rem; }
+.disclosure-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+
+/* ---- verdict ------------------------------------------------------------ */
+
+.result { display: grid; gap: 1.35rem; }
+
+.verdict { display: flex; align-items: center; gap: 1rem; }
+
+.verdict-badge {
+  flex: none;
+  width: 64px; height: 64px;
+  display: grid; place-items: center;
+  font-size: 2rem;
+  border-radius: 50%;
+  background: var(--ok-soft);
+}
+.verdict-badge.is-fake { background: var(--danger-soft); }
+
+.verdict-text { min-width: 0; }
+.verdict-for { margin: 0; font-size: .82rem; color: var(--text-muted); word-break: break-all; }
+.verdict-label { font-size: 1.5rem; letter-spacing: -.02em; color: var(--ok); }
+.verdict-label.is-fake { color: var(--danger); }
+.verdict-sub { margin: .15rem 0 0; font-size: .84rem; color: var(--text-muted); }
+
+/* ---- confidence --------------------------------------------------------- */
+
+.confidence-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: .84rem;
+  color: var(--text-muted);
+  margin-bottom: .4rem;
+}
+.confidence-head strong {
+  font-size: 1.15rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.meter {
+  height: 9px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ok);
+  transition: width .5s cubic-bezier(.22, 1, .36, 1);
+}
+.meter-fill.is-fake { background: var(--danger); }
+
+.prob-breakdown {
+  display: flex;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  margin-top: .6rem;
+  font-size: .8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- reasons ------------------------------------------------------------ */
+
+.section-title { font-size: .95rem; margin-bottom: .3rem; }
+.section-note { margin: 0 0 .85rem; font-size: .8rem; color: var(--text-muted); }
+
+.reasons { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+
+.reason {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .15rem .75rem;
+  align-items: center;
+  padding: .65rem .8rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+.reason.pushes-fake { border-left-color: var(--danger); }
+.reason.pushes-real { border-left-color: var(--ok); }
+
+.reason-name { font-size: .87rem; font-weight: 600; }
+.reason-detail {
+  grid-column: 1;
+  font-size: .78rem;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+.reason-impact {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  font-size: .78rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.reason.pushes-fake .reason-impact { color: var(--danger); }
+.reason.pushes-real .reason-impact { color: var(--ok); }
+
+.reasons-empty { font-size: .85rem; color: var(--text-muted); }
+
+/* ---- data list ---------------------------------------------------------- */
+
+.datalist { margin: 0; display: grid; gap: .1rem; }
+.datalist div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: .85rem;
+}
+.datalist div:last-child { border-bottom: none; }
+.datalist dt { color: var(--text-muted); }
+.datalist dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+.datalist dd.mono { font-family: var(--mono); font-size: .8rem; font-weight: 400; }
+
+/* ---- footer ------------------------------------------------------------- */
+
+.site-footer {
+  padding-block: 1.25rem 2.5rem;
+  font-size: .78rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+.site-footer p { margin: 0; }

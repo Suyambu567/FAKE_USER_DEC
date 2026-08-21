@@ -1,0 +1,283 @@
+{
+  "model_version": "20260821120528",
+  "algorithm": "XGBClassifier + TF-IDF(bio) + OneHot(language) + StandardScaler(numeric)",
+  "paper": "Fake Profile Detection Using XGBoost Algorithm (Venkadesh et al., ICRDICCT'25)",
+  "trained_at": "2026-08-21T12:05:28.327551+00:00",
+  "sklearn_version": "1.7.2",
+  "xgboost_version": "3.2.0",
+  "python_version": "3.11.15",
+  "dataset": "../data/dataset.csv",
+  "training_samples": 8000,
+  "classes": [
+    "Real",
+    "Fake"
+  ],
+  "positive_class": "Fake",
+  "label_mapping": {
+    "Real": 0,
+    "Fake": 1
+  },
+  "feature_columns": [
+    "profile_pic",
+    "len_fullname",
+    "fullname_words",
+    "ratio_numlen_fullname",
+    "len_desc",
+    "external_url",
+    "posts",
+    "followers",
+    "follows",
+    "verified",
+    "account_age_years",
+    "engagement_rate",
+    "avg_likes_per_post",
+    "avg_comments_per_post",
+    "engagement_consistency",
+    "follows_per_follower",
+    "posts_per_year",
+    "likes_per_follower",
+    "comments_per_like",
+    "bio_is_empty",
+    "bio_word_count",
+    "bio_digit_ratio",
+    "bio_upper_ratio",
+    "bio_has_url",
+    "bio_promo_terms",
+    "bio_clean",
+    "language"
+  ],
+  "numeric_columns": [
+    "profile_pic",
+    "len_fullname",
+    "fullname_words",
+    "ratio_numlen_fullname",
+    "len_desc",
+    "external_url",
+    "posts",
+    "followers",
+    "follows",
+    "verified",
+    "account_age_years",
+    "engagement_rate",
+    "avg_likes_per_post",
+    "avg_comments_per_post",
+    "engagement_consistency",
+    "follows_per_follower",
+    "posts_per_year",
+    "likes_per_follower",
+    "comments_per_like",
+    "bio_is_empty",
+    "bio_word_count",
+    "bio_digit_ratio",
+    "bio_upper_ratio",
+    "bio_has_url",
+    "bio_promo_terms"
+  ],
+  "text_column": "bio_clean",
+  "categorical_column": "language",
+  "paper_features": {
+    "available": [
+      "Profile Picture",
+      "Full name words",
+      "len_fullname",
+      "ratio_numlen_fullname",
+      "Bio/Description length",
+      "External URL",
+      "Posts",
+      "Followers",
+      "Follows"
+    ],
+    "unavailable": [
+      "Private",
+      "ratio_numlen_username",
+      "sim_name_username"
+    ]
+  },
+  "cleaning": {
+    "rows_in": 10000,
+    "rows_out": 10000,
+    "dropped_missing_target": 0,
+    "dropped_duplicates": 0,
+    "imputed": {},
+    "impute_values": {
+      "followers": 25044.5,
+      "following": 2477.0,
+      "posts": 249.0,
+      "engagement_rate": 5.0,
+      "profile_picture": 1.0,
+      "verified": 0.0,
+      "account_age_years": 6.0,
+      "avg_likes_per_post": 497.0,
+      "avg_comments_per_post": 50.0,
+      "engagement_consistency": 75.13,
+      "external_url": 1.0
+    },
+    "classes": [
+      "Fake",
+      "Real"
+    ],
+    "class_counts": {
+      "Fake": 5045,
+      "Real": 4955
+    }
+  },
+  "imbalance": {
+    "strategy": "none",
+    "reason": "negatives/positives = 0.98; the classes are close enough to balanced that reweighting would only add variance",
+    "negatives_per_positive": 0.9822,
+    "scale_pos_weight": null
+  },
+  "hyperparameters": {
+    "n_estimators": 400,
+    "max_depth": 6,
+    "learning_rate": 0.08,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "reg_lambda": 1.5,
+    "gamma": 0.0
+  },
+  "metrics": {
+    "accuracy": 0.511,
+    "baseline_accuracy": 0.5045,
+    "lift_over_baseline": 0.0065,
+    "precision": 0.5152,
+    "recall": 0.5193,
+    "f1": 0.5173,
+    "roc_auc": 0.509,
+    "pr_auc": 0.5148,
+    "confusion_matrix": {
+      "labels": [
+        "Real",
+        "Fake"
+      ],
+      "matrix": [
+        [
+          498,
+          493
+        ],
+        [
+          485,
+          524
+        ]
+      ],
+      "true_negative": 498,
+      "false_positive": 493,
+      "false_negative": 485,
+      "true_positive": 524
+    },
+    "test_samples": 2000,
+    "positive_class": "Fake",
+    "specificity": 0.5025,
+    "cv_accuracy_mean": 0.5073,
+    "cv_accuracy_std": 0.011,
+    "cv_folds": 3
+  },
+  "top_feature_importances": [
+    {
+      "feature": "txt__love",
+      "importance": 0.029772
+    },
+    {
+      "feature": "txt__aspiring",
+      "importance": 0.025487
+    },
+    {
+      "feature": "txt__creator",
+      "importance": 0.022993
+    },
+    {
+      "feature": "txt__journey",
+      "importance": 0.0224
+    },
+    {
+      "feature": "txt__collaborations",
+      "importance": 0.021737
+    },
+    {
+      "feature": "txt__artist",
+      "importance": 0.021698
+    },
+    {
+      "feature": "txt__advocate",
+      "importance": 0.021091
+    },
+    {
+      "feature": "txt__exploring",
+      "importance": 0.019749
+    },
+    {
+      "feature": "txt__positive",
+      "importance": 0.019322
+    },
+    {
+      "feature": "txt__foodie",
+      "importance": 0.019183
+    },
+    {
+      "feature": "txt__check",
+      "importance": 0.019018
+    },
+    {
+      "feature": "txt__blog",
+      "importance": 0.018956
+    },
+    {
+      "feature": "txt__nature",
+      "importance": 0.018822
+    },
+    {
+      "feature": "txt__recipes",
+      "importance": 0.018652
+    },
+    {
+      "feature": "txt__digital",
+      "importance": 0.018212
+    },
+    {
+      "feature": "txt__content",
+      "importance": 0.018164
+    },
+    {
+      "feature": "txt__inquiries",
+      "importance": 0.017924
+    },
+    {
+      "feature": "txt__blogger",
+      "importance": 0.017408
+    },
+    {
+      "feature": "txt__lover",
+      "importance": 0.017367
+    },
+    {
+      "feature": "num__likes_per_follower",
+      "importance": 0.017346
+    },
+    {
+      "feature": "txt__best",
+      "importance": 0.016992
+    },
+    {
+      "feature": "num__comments_per_like",
+      "importance": 0.016975
+    },
+    {
+      "feature": "txt__moments",
+      "importance": 0.016905
+    },
+    {
+      "feature": "num__profile_pic",
+      "importance": 0.01674
+    },
+    {
+      "feature": "cat__language_English",
+      "importance": 0.016619
+    }
+  ],
+  "warnings": [
+    "Trained on data/dataset.csv, whose 'Account Type' is drawn by np.random.choice in data/app.py. Kept as the control run: it shows what the paper pipeline scores when the labels carry no information.",
+    "Accuracy (0.511) does not meaningfully exceed the majority-class baseline (0.5045). This model has learned nothing and must not be used to action real accounts.",
+    "ROC-AUC is 0.509 \u2014 barely better than the 0.5 of a coin toss. The ranking this model produces is not informative.",
+    "Paper Table 1 attributes not present in this dataset and therefore not modelled: Private, ratio_numlen_username, sim_name_username. They were left out rather than synthesised."
+  ]
+}

@@ -1,0 +1,37 @@
+# Runtime -------------------------------------------------------------------
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+gunicorn==23.0.0
+pydantic==2.10.4
+pydantic-settings==2.7.0
+
+# ML ------------------------------------------------------------------------
+# scikit-learn is pinned exactly: a joblib artifact trained on one minor version
+# is not guaranteed to load on another. The API refuses to start on a mismatch
+# rather than failing at the first prediction, which is how the original Flask
+# app broke (requirements pinned 1.3.2, artifacts were built with 1.9.0).
+scikit-learn==1.7.2
+numpy==2.2.1
+pandas==2.2.3
+joblib==1.4.2
+scipy==1.15.0
+
+# XGBoost is a RUNTIME dependency, not just a training one: the artifact the API
+# serves is an XGBClassifier, and unpickling it imports xgboost. Pinned to the
+# major version the artifact records, which ModelService checks at startup and
+# refuses to load across.
+xgboost==3.2.0
+
+# Username lookup ------------------------------------------------------------
+# Async HTTP client for the third-party profile-data provider. Only imported
+# when PROFILE_PROVIDER=http, but pinned here so the image is reproducible.
+httpx==0.28.1
+
+# Tests ----------------------------------------------------------------------
+# Needed for `python -m pytest tests/`. Not imported by the service itself.
+pytest==9.1.1
+
+# Screenshots (optional) -------------------------------------------------------
+# Only for regenerating docs/screenshots via `python -m ml.shoot_screenshots`.
+# Install separately if you need it; it pulls a browser download:
+#   pip install playwright && playwright install chromium

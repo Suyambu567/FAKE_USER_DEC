@@ -1,0 +1,128 @@
+{
+  "model_version": "20260807043949",
+  "algorithm": "RandomForestClassifier + TF-IDF(bio) + StandardScaler(numeric)",
+  "trained_at": "2026-08-07T04:39:49.713725+00:00",
+  "sklearn_version": "1.7.2",
+  "python_version": "3.11.15",
+  "dataset": "../website/dataset.csv",
+  "training_samples": 15000,
+  "feature_count": 59,
+  "classes": [
+    "Fake",
+    "Real"
+  ],
+  "positive_class": "Fake",
+  "feature_map": {
+    "followers": "Followers",
+    "following": "Following",
+    "posts": "Posts",
+    "engagement_rate": "Engagement Rate (%)",
+    "avg_likes_per_post": "Avg Likes per Post",
+    "avg_comments_per_post": "Avg Comments per Post",
+    "verified": "Verified",
+    "account_age_years": "Account Age (Years)",
+    "bio_text": "Bio Text"
+  },
+  "hyperparameters": {
+    "n_estimators": 120,
+    "max_depth": 8,
+    "min_samples_leaf": 20
+  },
+  "metrics": {
+    "accuracy": 0.523,
+    "baseline_accuracy": 0.508,
+    "lift_over_baseline": 0.015,
+    "precision": 0.5316,
+    "recall": 0.5131,
+    "f1": 0.5222,
+    "roc_auc": 0.5188,
+    "cv_accuracy_mean": 0.5073,
+    "cv_accuracy_std": 0.0145
+  },
+  "top_feature_importances": [
+    {
+      "feature": "Followers",
+      "importance": 0.142385
+    },
+    {
+      "feature": "Posts",
+      "importance": 0.138345
+    },
+    {
+      "feature": "Following",
+      "importance": 0.12659
+    },
+    {
+      "feature": "Engagement Rate (%)",
+      "importance": 0.123987
+    },
+    {
+      "feature": "Avg Comments per Post",
+      "importance": 0.120621
+    },
+    {
+      "feature": "Avg Likes per Post",
+      "importance": 0.119585
+    },
+    {
+      "feature": "Account Age (Years)",
+      "importance": 0.069175
+    },
+    {
+      "feature": "Verified",
+      "importance": 0.016474
+    },
+    {
+      "feature": "entrepreneur",
+      "importance": 0.006934
+    },
+    {
+      "feature": "blogger",
+      "importance": 0.006692
+    },
+    {
+      "feature": "lifestyle",
+      "importance": 0.006271
+    },
+    {
+      "feature": "inquiries",
+      "importance": 0.005821
+    },
+    {
+      "feature": "fitness",
+      "importance": 0.004491
+    },
+    {
+      "feature": "creator",
+      "importance": 0.004347
+    },
+    {
+      "feature": "enthusiast",
+      "importance": 0.004322
+    },
+    {
+      "feature": "journey",
+      "importance": 0.004073
+    },
+    {
+      "feature": "updates",
+      "importance": 0.003953
+    },
+    {
+      "feature": "health",
+      "importance": 0.003951
+    },
+    {
+      "feature": "lover",
+      "importance": 0.003733
+    },
+    {
+      "feature": "website",
+      "importance": 0.003523
+    }
+  ],
+  "warnings": [
+    "Bio Text has only 15 distinct values across 15000 rows; it carries almost no signal and the TF-IDF features are near-constant.",
+    "No numeric feature separates the classes (largest standardised mean difference is 0.0395 on 'Engagement Rate (%)'). The labels appear to be statistically independent of the features -- consistent with data/app.py generating 'Account Type' via np.random.choice. No model can beat the majority-class baseline on this data."
+  ]
+}

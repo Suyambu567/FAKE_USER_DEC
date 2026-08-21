@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Fake profile detection that runs entirely in your browser. No server, no upload.">
+<title>Fake User Detection</title>
+<link rel="stylesheet" href="css/styles.css">
+
+<!-- Installable on a phone's home screen, and usable offline once cached. -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="FakeCheck">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🔍</span>
+      <div>
+        <h1>Fake User Detection</h1>
+        <p class="brand-sub">Runs entirely in your browser</p>
+      </div>
+    </div>
+    <button id="themeToggle" class="icon-btn" type="button"
+            aria-label="Switch colour theme" title="Switch colour theme">◐</button>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+  <!-- Model loading / failure -------------------------------------------- -->
+  <div id="modelStatus" class="notice notice-info" role="status">
+    <span class="spinner" aria-hidden="true"></span>
+    <span>Loading detection model…</span>
+  </div>
+
+  <!-- Input --------------------------------------------------------------- -->
+  <section class="card" aria-labelledby="analyseHeading">
+    <h2 id="analyseHeading" class="card-title">Analyze a profile</h2>
+
+    <form id="analyzeForm" novalidate>
+      <div class="field">
+        <label for="userId">User ID</label>
+        <div class="input-prefix">
+          <span aria-hidden="true">@</span>
+          <input id="userId" name="userId" type="text" inputmode="text"
+                 autocomplete="off" autocapitalize="none" spellcheck="false"
+                 placeholder="username" maxlength="30"
+                 aria-describedby="userIdError userIdHelp">
+        </div>
+        <p id="userIdHelp" class="field-help">
+          Letters, numbers, dots and underscores. Up to 30 characters.
+        </p>
+        <p id="userIdError" class="field-error" role="alert" hidden></p>
+      </div>
+
+      <!-- Profile details ------------------------------------------------- -->
+      <details id="profileDetails" class="disclosure">
+        <summary>
+          <span>Profile statistics</span>
+          <span class="disclosure-hint" id="profileHint">optional — demo data is used if left blank</span>
+        </summary>
+
+        <div class="disclosure-body">
+          <p class="notice notice-warn compact">
+            <strong>A web page cannot read Instagram.</strong>
+            Instagram's API only exposes accounts that authorised an app, and a browser
+            cannot scrape it. Leave these blank and a <em>deterministic demo profile</em>
+            is generated from the user ID — useful for trying the app, meaningless as a
+            real verdict. Fill them in with the profile's real numbers for a real analysis.
+          </p>
+
+          <div class="grid">
+            <div class="field">
+              <label for="followers">Followers</label>
+              <input id="followers" name="followers" type="number" min="0" step="1" inputmode="numeric" placeholder="5000">
+              <p class="field-error" data-error-for="followers" role="alert" hidden></p>
+            </div>
+            <div class="field">
+              <label for="following">Following</label>
+              <input id="following" name="following" type="number" min="0" step="1" inputmode="numeric" placeholder="300">
+              <p class="field-error" data-error-for="following" role="alert" hidden></p>
+            </div>
+            <div class="field">
+              <label for="posts">Posts</label>
+              <input id="posts" name="posts" type="number" min="0" step="1" inputmode="numeric" placeholder="150">
+              <p class="field-error" data-error-for="posts" role="alert" hidden></p>
+            </div>
+            <div class="field">
+              <label for="engagement">Engagement rate (%)</label>
+              <input id="engagement" name="engagement" type="number" min="0" max="100" step="0.01" inputmode="decimal" placeholder="4.5">
+              <p class="field-error" data-error-for="engagement" role="alert" hidden></p>
+            </div>
+            <div class="field">
+              <label for="likes">Avg likes per post</label>
+              <input id="likes" name="likes" type="number" min="0" step="1" inputmode="numeric" placeholder="400">
+              <p class="field-error" data-error-for="likes" role="alert" hidden></p>
+            </div>
+            <div class="field">
+              <label for="comments">Avg comments per post</label>
+              <input id="comments" name="comments" type="number" min="0" step="1" inputmode="numeric" placeholder="20">
+              <p class="field-error" data-error-for="comments" role="alert" hidden></p>
+            </div>
+            <div class="field">
+              <label for="age">Account age (years)</label>
+              <input id="age" name="age" type="number" min="0" max="100" step="0.1" inputmode="decimal" placeholder="5">
+              <p class="field-error" data-error-for="age" role="alert" hidden></p>
+            </div>
+            <div class="field field-check">
+              <label for="verified" class="checkbox">
+                <input id="verified" name="verified" type="checkbox">
+                <span>Verified badge</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="bio">Bio text</label>
+            <textarea id="bio" name="bio" rows="2" maxlength="2000"
+                      placeholder="Whatever the profile's bio says"></textarea>
+            <p class="field-error" data-error-for="bio" role="alert" hidden></p>
+          </div>
+
+          <div class="disclosure-actions">
+            <button type="button" class="btn btn-ghost" id="fillDemo">Fill with demo data</button>
+            <button type="button" class="btn btn-ghost" id="clearForm">Clear</button>
+          </div>
+        </div>
+      </details>
+
+      <button id="analyzeBtn" class="btn btn-primary btn-block" type="submit">
+        <span class="btn-label">Analyze</span>
+        <span class="spinner spinner-btn" aria-hidden="true" hidden></span>
+      </button>
+    </form>
+  </section>
+
+  <!-- Result -------------------------------------------------------------- -->
+  <section id="result" class="card result" hidden aria-live="polite" aria-labelledby="verdictLabel">
+
+    <div id="demoBanner" class="notice notice-warn" hidden>
+      <strong>Demo data.</strong>
+      <span>These statistics were generated from the user ID, not fetched from Instagram.
+      This verdict says nothing about the real account.</span>
+    </div>
+
+    <div class="verdict">
+      <div id="verdictBadge" class="verdict-badge">
+        <span id="verdictIcon" class="verdict-icon" aria-hidden="true">✅</span>
+      </div>
+      <div class="verdict-text">
+        <p class="verdict-for">@<span id="verdictUser"></span></p>
+        <h2 id="verdictLabel" class="verdict-label">Real User</h2>
+        <p id="verdictSub" class="verdict-sub"></p>
+      </div>
+    </div>
+
+    <div class="confidence">
+      <div class="confidence-head">
+        <span>Confidence</span>
+        <strong id="confidenceValue">0%</strong>
+      </div>
+      <div class="meter" role="img" aria-label="Confidence meter">
+        <div id="confidenceBar" class="meter-fill" style="width:0%"></div>
+      </div>
+      <div id="probBreakdown" class="prob-breakdown"></div>
+    </div>
+
+    <div id="reliabilityNote" class="notice notice-danger" hidden></div>
+
+    <div class="section">
+      <h3 class="section-title">Why</h3>
+      <p class="section-note">
+        Each factor is re-scored with that value replaced by a typical profile's,
+        showing how much it moved the verdict.
+      </p>
+      <ul id="reasons" class="reasons"></ul>
+    </div>
+
+    <details class="disclosure">
+      <summary><span>Data used for this analysis</span></summary>
+      <div class="disclosure-body">
+        <dl id="profileDump" class="datalist"></dl>
+      </div>
+    </details>
+  </section>
+
+  <!-- Model info ---------------------------------------------------------- -->
+  <section id="modelCard" class="card" hidden>
+    <h2 class="card-title">About this model</h2>
+    <dl id="modelMeta" class="datalist"></dl>
+    <div id="modelWarnings"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer wrap">
+  <p>
+    Everything runs locally. Nothing you type is uploaded, and no request leaves
+    this page after the model file loads.
+  </p>
+</footer>
+
+<script src="js/model.js"></script>
+<script src="js/features.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  // Offline support. Registration failing is not an error worth showing —
+  // it just means no offline caching (e.g. served over plain http from an IP).
+  if ('serviceWorker' in navigator) {
+    addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

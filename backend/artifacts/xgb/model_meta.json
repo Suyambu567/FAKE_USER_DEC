@@ -1,0 +1,278 @@
+{
+  "model_version": "20260821124731",
+  "algorithm": "XGBClassifier + TF-IDF(bio) + OneHot(language) + StandardScaler(numeric)",
+  "paper": "Fake Profile Detection Using XGBoost Algorithm (Venkadesh et al., ICRDICCT'25)",
+  "trained_at": "2026-08-21T12:47:31.464088+00:00",
+  "sklearn_version": "1.7.2",
+  "xgboost_version": "3.2.0",
+  "python_version": "3.11.15",
+  "dataset": "../data/paper_signal.csv",
+  "training_samples": 40000,
+  "classes": [
+    "Real",
+    "Fake"
+  ],
+  "positive_class": "Fake",
+  "label_mapping": {
+    "Real": 0,
+    "Fake": 1
+  },
+  "feature_columns": [
+    "profile_pic",
+    "len_fullname",
+    "fullname_words",
+    "ratio_numlen_fullname",
+    "len_desc",
+    "external_url",
+    "posts",
+    "followers",
+    "follows",
+    "verified",
+    "account_age_years",
+    "engagement_rate",
+    "avg_likes_per_post",
+    "avg_comments_per_post",
+    "follows_per_follower",
+    "posts_per_year",
+    "likes_per_follower",
+    "comments_per_like",
+    "bio_is_empty",
+    "bio_word_count",
+    "bio_digit_ratio",
+    "bio_upper_ratio",
+    "bio_has_url",
+    "bio_promo_terms",
+    "bio_clean",
+    "language"
+  ],
+  "feature_count": 133,
+  "numeric_columns": [
+    "profile_pic",
+    "len_fullname",
+    "fullname_words",
+    "ratio_numlen_fullname",
+    "len_desc",
+    "external_url",
+    "posts",
+    "followers",
+    "follows",
+    "verified",
+    "account_age_years",
+    "engagement_rate",
+    "avg_likes_per_post",
+    "avg_comments_per_post",
+    "follows_per_follower",
+    "posts_per_year",
+    "likes_per_follower",
+    "comments_per_like",
+    "bio_is_empty",
+    "bio_word_count",
+    "bio_digit_ratio",
+    "bio_upper_ratio",
+    "bio_has_url",
+    "bio_promo_terms"
+  ],
+  "text_column": "bio_clean",
+  "categorical_column": "language",
+  "paper_features": {
+    "available": [
+      "Profile Picture",
+      "Full name words",
+      "len_fullname",
+      "ratio_numlen_fullname",
+      "Bio/Description length",
+      "External URL",
+      "Posts",
+      "Followers",
+      "Follows"
+    ],
+    "unavailable": [
+      "Private",
+      "ratio_numlen_username",
+      "sim_name_username"
+    ]
+  },
+  "cleaning": {
+    "rows_in": 50000,
+    "rows_out": 50000,
+    "dropped_missing_target": 0,
+    "dropped_duplicates": 0,
+    "imputed": {},
+    "impute_values": {
+      "profile_picture": 1.0,
+      "external_url": 0.0,
+      "followers": 420.0,
+      "following": 526.0,
+      "posts": 96.0,
+      "engagement_rate": 2.28,
+      "avg_likes_per_post": 11.0,
+      "avg_comments_per_post": 0.0,
+      "verified": 0.0,
+      "account_age_years": 2.8
+    },
+    "classes": [
+      "Real",
+      "Fake"
+    ],
+    "class_counts": {
+      "Real": 31683,
+      "Fake": 18317
+    }
+  },
+  "imbalance": {
+    "strategy": "class-weight",
+    "reason": "negatives/positives = 1.73; XGBoost's scale_pos_weight is set to that ratio",
+    "negatives_per_positive": 1.7297,
+    "scale_pos_weight": 1.7296
+  },
+  "hyperparameters": {
+    "n_estimators": 400,
+    "max_depth": 6,
+    "learning_rate": 0.08,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "reg_lambda": 1.5,
+    "gamma": 0.0
+  },
+  "metrics": {
+    "accuracy": 0.9409,
+    "baseline_accuracy": 0.6337,
+    "lift_over_baseline": 0.3072,
+    "precision": 0.9349,
+    "recall": 0.9014,
+    "f1": 0.9179,
+    "roc_auc": 0.9331,
+    "pr_auc": 0.9015,
+    "confusion_matrix": {
+      "labels": [
+        "Real",
+        "Fake"
+      ],
+      "matrix": [
+        [
+          6107,
+          230
+        ],
+        [
+          361,
+          3302
+        ]
+      ],
+      "true_negative": 6107,
+      "false_positive": 230,
+      "false_negative": 361,
+      "true_positive": 3302
+    },
+    "test_samples": 10000,
+    "positive_class": "Fake",
+    "specificity": 0.9637,
+    "cv_accuracy_mean": 0.94,
+    "cv_accuracy_std": 0.0018,
+    "cv_folds": 5
+  },
+  "top_feature_importances": [
+    {
+      "feature": "num__follows_per_follower",
+      "importance": 0.241855
+    },
+    {
+      "feature": "num__ratio_numlen_fullname",
+      "importance": 0.035675
+    },
+    {
+      "feature": "num__posts",
+      "importance": 0.035106
+    },
+    {
+      "feature": "txt__chartered",
+      "importance": 0.017474
+    },
+    {
+      "feature": "txt__mum",
+      "importance": 0.013606
+    },
+    {
+      "feature": "txt__aspiring",
+      "importance": 0.013435
+    },
+    {
+      "feature": "txt__hoarder",
+      "importance": 0.012177
+    },
+    {
+      "feature": "txt__love",
+      "importance": 0.011449
+    },
+    {
+      "feature": "txt__bio",
+      "importance": 0.011221
+    },
+    {
+      "feature": "txt__amateur",
+      "importance": 0.010974
+    },
+    {
+      "feature": "txt__enthusiast",
+      "importance": 0.010604
+    },
+    {
+      "feature": "txt__lover",
+      "importance": 0.010162
+    },
+    {
+      "feature": "num__follows",
+      "importance": 0.009599
+    },
+    {
+      "feature": "txt__blog",
+      "importance": 0.009169
+    },
+    {
+      "feature": "txt__advocate",
+      "importance": 0.009161
+    },
+    {
+      "feature": "txt__beats",
+      "importance": 0.00913
+    },
+    {
+      "feature": "txt__just",
+      "importance": 0.009098
+    },
+    {
+      "feature": "txt__quick",
+      "importance": 0.009081
+    },
+    {
+      "feature": "num__bio_promo_terms",
+      "importance": 0.008926
+    },
+    {
+      "feature": "txt__coffee",
+      "importance": 0.008917
+    },
+    {
+      "feature": "txt__baker",
+      "importance": 0.008897
+    },
+    {
+      "feature": "txt__developer",
+      "importance": 0.008829
+    },
+    {
+      "feature": "txt__cyclist",
+      "importance": 0.008653
+    },
+    {
+      "feature": "txt__exploring",
+      "importance": 0.008624
+    },
+    {
+      "feature": "num__avg_comments_per_post",
+      "importance": 0.008538
+    }
+  ],
+  "warnings": [
+    "Paper Table 1 attributes not present in this dataset and therefore not modelled: Private, ratio_numlen_username, sim_name_username. They were left out rather than synthesised."
+  ]
+}

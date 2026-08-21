@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Fake Profile Detection AI</title>
+    <style>
+        :root {
+            --primary: #6e8efb;
+            --primary-dark: #5a75d8;
+            --secondary: #a777e3;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --border: #e9ecef;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-hover: 0 8px 15px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+            --transition-fast: all 0.15s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .sidebar-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            transition: var(--transition);
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: width 0.3s ease;
+        }
+        .sidebar-nav a:hover::before {
+            width: 100%;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+        .sidebar-nav a.active {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            font-weight: 600;
+        }
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .header {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(110, 142, 251, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(167, 119, 227, 0.03) 0%, transparent 40%);
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .user-status {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        /* Stats Container */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .stats-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(110, 142, 251, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(167, 119, 227, 0.02) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(110, 142, 251, 0.2);
+        }
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        /* Content Section */
+        .content-section {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: -25%;
+            left: -25%;
+            width: 150%;
+            height: 150%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(110, 142, 251, 0.02) 0%, transparent 40%),
+                radial-gradient(circle at 80% 50%, rgba(167, 119, 227, 0.02) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+        }
+        .content-section-content {
+            position: relative;
+            z-index: 2;
+        }
+        .content-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition-fast);
+            background: #f8f9fa;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(110,142,251,0.2);
+            background: #fff;
+            transform: translateY(-1px);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #bdc3c7;
+        }
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(110,142,251,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.2),
+                transparent
+            );
+            transition: left 0.6s ease;
+        }
+        .btn:hover::before {
+            left: 100%;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110,142,251,0.5);
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .hint {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            display: block;
+            min-height: 1.2em;
+        }
+        /* Flash messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .alert-error {
+            background-color: #fdf2f2;
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        .alert-success {
+            background-color: #f0fff4;
+            color: #1e8449;
+            border: 1px solid #27ae60;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 80px 1fr;
+            }
+            .sidebar-header h1,
+            .sidebar-nav span,
+            .user-details,
+            .stat-label {
+                display: none;
+            }
+            .sidebar-header p {
+                display: none;
+            }
+            .sidebar-header {
+                justify-content: center;
+            }
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 1rem;
+            }
+            .sidebar-nav a i {
+                margin-right: 0;
+            }
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-section {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            body {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .user-info {
+                justify-content: center;
+            }
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(10px);
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>🤖 AI Detect</h1>
+            <p>Fake Profile Detection</p>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/" class="active"><span>🔍 Search Profiles</span></a></li>
+            <li><a href="/dashboard"><span>📊 Dashboard</span></a></li>
+            <li><a href="/analytics"><span>📈 Analytics</span></a></li>
+            <li><a href="/settings"><span>⚙️ Settings</span></a></li>
+            <li><a href="/profile"><span>👤 Profile</span></a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="header-content">
+                <h1>🤖 Fake Profile Detection AI</h1>
+                <div class="user-info">
+                    <div class="user-avatar">S</div>
+                    <div class="user-details">
+                        <div class="user-name">Welcome Back, Suyambu 👋</div>
+                        <div class="user-status">Last seen just now</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value">10.2K</div>
+                <div class="stat-label">Followers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">➡️</div>
+                <div class="stat-value">560</div>
+                <div class="stat-label">Following</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-value">215</div>
+                <div class="stat-label">Engagement</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="content-section-content">
+                <h2>Social Media Profile Analysis</h2>
+
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+
+                <form action="/predict" method="POST">
+                    <div class="form-group">
+                        <label for="Followers">Followers</label>
+                        <input type="number" id="Followers" name="Followers" placeholder="Enter follower count" required>
+                        <div class="hint">Number of followers</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Following">Following</label>
+                        <input type="number" id="Following" name="Following" placeholder="Enter following count" required>
+                        <div class="hint">Number of accounts they follow</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Posts">Posts</label>
+                        <input type="number" id="Posts" name="Posts" placeholder="Enter post count" required>
+                        <div class="hint">Total posts made</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Engagement Rate (%)">Engagement Rate (%)</label>
+                        <input type="number" step="0.01" id="Engagement Rate (%)" name="Engagement Rate (%)" placeholder="Enter engagement rate" required>
+                        <div class="hint">Average engagement percentage</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Avg Likes per Post">Average Likes per Post</label>
+                        <input type="number" id="Avg Likes per Post" name="Avg Likes per Post" placeholder="Enter average likes" required>
+                        <div class="hint">Average likes received per post</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Avg Comments per Post">Average Comments per Post</label>
+                        <input type="number" id="Avg Comments per Post" name="Avg Comments per Post" placeholder="Enter average comments" required>
+                        <div class="hint">Average comments received per post</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Verified">Verified Status</label>
+                        <select id="Verified" name="Verified" required>
+                            <option value="">Select verification status</option>
+                            <option value="0">Not Verified</option>
+                            <option value="1">Verified</option>
+                        </select>
+                        <div class="hint">Account verification status</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Account Age (Years)">Account Age (Years)</label>
+                        <input type="number" id="Account Age (Years)" name="Account Age (Years)" placeholder="Enter account age" required>
+                        <div class="hint">Years since account creation</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Bio Text">Bio Text</label>
+                        <input type="text" id="Bio Text" name="Bio Text" list="bioOptions" placeholder="Enter profile bio here..." required>
+                        <datalist id="bioOptions">
+                            <option value="Fitness enthusiast 💪 | Health advocate">
+                            <option value="Foodie | Reviews and recipes">
+                            <option value="Love exploring new places 🌎">
+                            <option value="Follow for daily inspiration 🌟">
+                            <option value="Personal blog | Stay positive ✨">
+                            <option value="Passionate traveler and food lover">
+                            <option value="DM for collaborations or inquiries!">
+                            <option value="Aspiring artist | Drawing my dreams">
+                            <option value="Entrepreneur & lifestyle blogger">
+                            <option value="Nature lover | Saving the planet 🌎">
+                            <option value="Check out my website for more updates!">
+                            <option value="Business inquiries? Contact below 👇">
+                            <option value="Photographer and content creator 📸">
+                            <option value="Digital nomad living my best life 🌴">
+                            <option value="Sharing moments from my journey">
+                        </datalist>
+                        <div class="hint">Profile biography text (select from common options or type your own)</div>
+                    </div>
+
+                    <button type="submit" class="btn">🚀 Analyze Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
