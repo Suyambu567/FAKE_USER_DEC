@@ -29,9 +29,15 @@ class ModelMetrics(BaseModel):
     """Honest metrics, straight from the training run.
 
     `baseline_accuracy` is the majority-class rate. If `accuracy` is not clearly
-    above it, the model has no predictive power -- which is exactly the case for
-    the dataset shipped with this project. Exposing both makes that impossible to
-    hide behind a single impressive-looking number.
+    above it, the model has no predictive power -- on the random-label dataset
+    shipped in `data/`, it is not. Exposing both makes that impossible to hide
+    behind a single impressive-looking number.
+
+    Everything a trainer may legitimately not produce is optional. The
+    cross-validation fields were required, which meant a model trained with the
+    documented `--cv-folds 0` wrote metadata this model rejected, and
+    `GET /api/v1/model/info` answered 500 instead of reporting the metrics it
+    did have.
     """
 
     accuracy: float
@@ -40,10 +46,28 @@ class ModelMetrics(BaseModel):
     recall: float
     f1: float
     roc_auc: float
-    cv_accuracy_mean: float
-    cv_accuracy_std: float
     lift_over_baseline: float = Field(
         ..., description="accuracy - baseline_accuracy. <= 0 means the model is useless."
+    )
+
+    # Present when cross-validation ran (`--cv-folds` > 1).
+    cv_accuracy_mean: float | None = None
+    cv_accuracy_std: float | None = None
+    cv_folds: int | None = None
+
+    # Written by ml.evaluation; absent from older artifacts.
+    specificity: float | None = Field(
+        None, description="True-negative rate. A false positive is a real user wrongly flagged."
+    )
+    pr_auc: float | None = Field(
+        None, description="Average precision. The metric that matters at a low fake rate."
+    )
+    test_samples: int | None = None
+    positive_class: str | None = None
+    confusion_matrix: dict | None = Field(
+        None,
+        description="Labels, the 2x2 matrix, and the four cells named. Accuracy alone "
+                    "cannot show whether the errors are missed fakes or flagged real users.",
     )
 
 
