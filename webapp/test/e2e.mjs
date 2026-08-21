@@ -1,17 +1,20 @@
 /** End-to-end check in a real browser: does the page render and work? */
 // playwright ships CommonJS, so pull chromium off the default export.
-import playwright from '/home/leelai/node_modules/playwright/index.js';
+// Resolved by name, not by absolute path: the path this used to hardcode only
+// existed on one machine, so the test could not run anywhere else. Set
+// NODE_PATH if playwright lives outside the usual resolution roots.
+import playwright from 'playwright';
 const { chromium } = playwright;
 
 const BASE = process.argv[2] || 'http://127.0.0.1:8451';
 
-// The installed playwright package expects a browser build that is not present
-// on this machine, so point it at one that is. Override with CHROME_PATH.
-const executablePath = process.env.CHROME_PATH ||
-  '/home/leelai/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome';
+// Let playwright find its own browser. Only override when the installed package
+// cannot see the build it wants:
+//   CHROME_PATH=/path/to/chrome node test/e2e.mjs
+const executablePath = process.env.CHROME_PATH || undefined;
 
 const browser = await chromium.launch({
-  executablePath,
+  ...(executablePath ? { executablePath } : {}),
   args: ['--no-sandbox', '--disable-dev-shm-usage'],
 });
 let failed = 0;
